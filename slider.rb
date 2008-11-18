@@ -1,4 +1,6 @@
 class Slider < Widget
+  attr_accessor :left
+  
   def initialize(options = {})
     @bounds = stack :width => 200, :height => 50 do
       background white
@@ -10,10 +12,14 @@ class Slider < Widget
       @knob.click { start_dragging }
       @knob.release { stop_dragging }
       
-      @timer = animate(48) { update_position if @dragging and within_bounds? }.stop
+      @timer = animate(48) { update_position if dragging? and within_bounds? }.stop
       
       click { update_position }
     end
+  end
+  
+  def dragging?
+    @dragging
   end
   
 private
@@ -28,16 +34,20 @@ private
   end
   
   def update_position
-    @knob.left = mouse[1] - (@knob.width / 2)
+    self.left = @knob.left = mouse[1] - (@knob.width / 2)
   end
   
   def within_bounds?
-    (mouse[1] > (@bounds.left + @knob_half_width)) and 
-    (mouse[1] < (@bounds.width - @knob_half_width))
+    (mouse[1] > (@bounds.left)) and 
+    (mouse[1] < (@bounds.width - @knob.width))
   end
 end
 
 Shoes.app :width => 400, :height => 200 do
   background purple
   @slider = slider
+  @info = para
+  every 0.1 do
+    @info.replace @slider.left if @slider.dragging?
+  end
 end
