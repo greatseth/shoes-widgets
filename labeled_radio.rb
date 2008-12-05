@@ -6,8 +6,10 @@ class LabeledRadio < Shoes::Widget
     para text, options
     
     click do
-      @radio.checked = !@radio.checked?
-      block.call @radio
+      unless @radio.state == "disabled"
+        @radio.checked = !@radio.checked?
+        block.call @radio
+      end
     end
   end
   
