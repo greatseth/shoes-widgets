@@ -1,4 +1,4 @@
-class Slider < Widget
+class Slider < Shoes::Widget
   attr_reader :percent
   
   def initialize(options = {})
@@ -60,23 +60,5 @@ class Slider < Widget
   
   def within_bounds?
     (mouse[1] > @bounds.left) and (mouse[1] < @bounds.width)
-  end
-end
-
-Shoes.app :width => 400, :height => 200 do
-  background purple
-  
-  stack :width => 200, :height => 200 do
-    @slider = slider
-  end
-  
-  @info = para
-  
-  every 0.1 do
-    @info.replace @slider.percent if @slider.dragging?
-  end
-  
-  release do
-    @slider.stop_dragging if @slider.dragging?
   end
 end
