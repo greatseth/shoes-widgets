@@ -8,10 +8,12 @@ id,name,description
 CSV
 
 Shoes.app do
-  table :background => white, :stroke => black, :zebra => green, :margin => 10 do
+  t = table :background => white, :stroke => black, :zebra => green, :margin => 10 do
     CSV.split("\n").each_with_index do |line,i|
       method = 0 == i ? :header : :row
       send method, *line.split(",")
     end
   end
+  
+  t.column_widths[0] = 50
 end

@@ -1,7 +1,29 @@
 class Table < Shoes::Widget
+  class ColumnWidths < Array
+    def initialize(table)
+      @table = table
+    end
+    
+    def []=(i, value)
+      @table.slot.contents.select { |s| s.class.name =~ /Stack|Flow/ }.each do |row|
+        row.contents.select { |s| s.class.name =~ /Stack|Flow/ }[i].width = value
+      end
+    end
+    
+    def method_missing(m, *a, &b)
+      slot.respond_to?(m) ? slot.send(m, *a, &b) : super
+    end
+  end
+  
+  attr_reader :slot, :headers, :rows, :column_widths
+  
   def initialize(options = {}, &block)
+    @slot = self
+    
     @headers = []
     @rows    = Hash.new []
+    
+    @column_widths = ColumnWidths.new self
     
     @options = {
       :width => 1.0
@@ -65,7 +87,9 @@ private
   
   def rowflow
     f = flow(:width => 1.0) { yield }
-    f.contents.each { |c| c.width = 1 / f.contents.size.to_f }
+    f.contents.each_with_index do |c,i|
+      c.width = 1 / f.contents.size.to_f
+    end
     f
   end
 end
