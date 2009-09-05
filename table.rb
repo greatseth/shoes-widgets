@@ -15,10 +15,6 @@ class Table < Shoes::Widget
         row.contents.slots[i].width = value
       end
     end
-    
-    def method_missing(m, *a, &b)
-      slot.respond_to?(m) ? slot.send(m, *a, &b) : super
-    end
   end
   
   attr_reader :slot, :headers, :rows, :column_widths
