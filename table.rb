@@ -46,12 +46,12 @@ class Table < Shoes::Widget
   
   def header(*titles)
     @row_even = true
-    @headers << rowflow { titles.each { |x| header_column x } }
+    @headers << rowflow(:header, *titles)
   end
   
   def row(*values)
     @row_even = !@row_even
-    @rows[@headers.last] << rowflow { values.each { |x| row_column x } }
+    @rows[@headers.last] << rowflow(:row, *values)
   end
   
 private
@@ -87,8 +87,10 @@ private
     end
   end
   
-  def rowflow
-    f = flow(:width => 1.0) { yield }
+  def rowflow(type, *stuff)
+    f = flow(:width => 1.0) do
+      stuff.each { |x| send "#{type}_column", x }
+    end
     f.contents.each_with_index do |c,i|
       c.width = 1 / f.contents.size.to_f
     end
