@@ -15,5 +15,5 @@ Shoes.app do
     end
   end
   
-  t.column_widths[0] = 50
+  t.column_widths[0]  = 50
 end

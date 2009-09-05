@@ -1,12 +1,18 @@
 class Table < Shoes::Widget
-  class ColumnWidths < Array
+  class ::Array
+    def slots
+      select { |s| s.class.name =~ /Stack|Flow/ }
+    end
+  end
+  
+  class ColumnWidths < ::Array
     def initialize(table)
       @table = table
     end
     
     def []=(i, value)
-      @table.slot.contents.select { |s| s.class.name =~ /Stack|Flow/ }.each do |row|
-        row.contents.select { |s| s.class.name =~ /Stack|Flow/ }[i].width = value
+      @table.slot.contents.slots.each do |row|
+        row.contents.slots[i].width = value
       end
     end
     
